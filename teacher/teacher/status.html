@@ -9,10 +9,11 @@
         <script src="../js/jquery-2.1.0.min.js"></script>
         <script src="../js/fontSize.js"></script>
         <script src="../layui/layui.js"></script>
+        <script src="../js/vue.js"></script>
     </head>
     <body>
         <div class="class-top">
-            <span class="layui-icon class-top-return">&#xe603;</span>
+            <span class="layui-icon class-top-return" @click="classTopReturn">&#xe603;</span>
             <span class="class-top-title">工作状态</span>
         </div>
         <div class="class-div0">
@@ -22,7 +23,7 @@
                 </div>
             </div>
             <div class="class-div1">
-                <div class="class-div2">
+                <!-- <div class="class-div2">
                     <span class="class-span0">在办公室</span>
                 </div>
                 <div class="class-div2">
@@ -39,8 +40,19 @@
                 </div>
                 <div class="class-div2">
                     <span class="class-span0">外出中</span>
+                </div> -->
+                <currentStatus
+                 v-for="(item, index) of statuss"
+                 :key="index"
+                 :content="item"
+                >
+                </currentStatus>
+                <div class="class-div2">
+                    <span class="class-span0">新增</span>
                 </div>
             </div>
         </div>
+        <script src="../js/main.js"></script>
+        <script src="../js/status.js"></script>
     </body>
 </html>

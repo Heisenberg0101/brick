@@ -8,38 +8,39 @@
         <script src="../js/jquery-2.1.0.min.js"></script>
         <script src="../js/fontSize.js"></script>
         <script src="../layui/layui.js"></script>
+        <script src="../js/vue.js"></script>
     </head>
     <body>
         <div>
             <!-- 上 -->
             <div class="class-top">
-                <span class="layui-icon class-top-return">&#xe603;</span>
+                <span class="layui-icon class-top-return" @click="classTopReturn">&#xe603;</span>
                 <span class="class-top-title">教师发展</span>
             </div>
             <!-- 中间 -->
             <div class="class-div0">
                 <div class="class-div1">
-                    <div class="class-div2">
+                    <div class="class-div2" @click="message">
                         <span class="class-span0">基本信息</span>
                         <!-- <span class="class-span1">0%</span> -->
                         <span class="class-span2 layui-icon">&#xe602;</span>
                     </div>
-                    <div class="class-div2">
+                    <div class="class-div2" @click="">
                         <span class="class-span0">个人简历</span>
                         <!-- <span class="class-span1">0%</span> -->
                         <span class="class-span2 layui-icon">&#xe602;</span>
                     </div>
-                    <div class="class-div2">
+                    <div class="class-div2" @click="teaching">
                         <span class="class-span0">教学过程</span>
                         <!-- <span class="class-span1">0%</span> -->
                         <span class="class-span2 layui-icon">&#xe602;</span>
                     </div>
-                    <div class="class-div2">
+                    <div class="class-div2" @click="score">
                         <span class="class-span0">教学成绩</span>
                         <!-- <span class="class-span1">0%</span> -->
                         <span class="class-span2 layui-icon">&#xe602;</span>
                     </div>
-                    <div class="class-div2">
+                    <div class="class-div2" @click="honor">
                         <span class="class-span0">荣誉表彰</span>
                         <!-- <span class="class-span1">0%</span> -->
                         <span class="class-span2 layui-icon">&#xe602;</span>
@@ -47,5 +48,7 @@
                 </div>
             </div>
         </div>
+        <script src="../js/teacherGrow.js"></script>
+        <script src="../js/main.js"></script>
     </body>
 </html>

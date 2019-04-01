@@ -8,27 +8,31 @@
         <script src="../js/jquery-2.1.0.min.js"></script>
         <script src="../js/fontSize.js"></script>
         <script src="../layui/layui.js"></script>
+        <script src="../js/vue.js"></script>
     </head>
     <body>
         <!-- 上 -->
         <div class="class-top">
-            <span class="layui-icon class-top-return">&#xe603;</span>
+            <span class="layui-icon class-top-return"  @click="classTopReturn">&#xe603;</span>
             <span class="class-top-title">政治面貌</span>
         </div>
         <!-- 中 -->
         <div class="class-div0">
             <div class="class-div1">
                 <div class="class-div2">
-                    <span class="class-span0"></span>
-                    <span class="class-span1"></span>
-                    <span class="class-span2 layui-icon">&#xe602;</span>
+                    <span class="class-span0">群众</span>
                 </div>
                 <div class="class-div2">
-                    <span class="class-span0"></span>
-                    <span class="class-span1"></span>
-                    <span class="class-span2 layui-icon">&#xe602;</span>
+                    <span class="class-span0">共青团员</span>
+                </div>
+                <div class="class-div2">
+                    <span class="class-span0">中共团员</span>
+                </div>
+                <div class="class-div2">
+                    <span class="class-span0">其它</span>
                 </div>
             </div>
         </div>
+        <script src="../js/main.js"></script>
     </body>
 </html>
