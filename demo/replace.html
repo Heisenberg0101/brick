@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>替换</title>
+    </head>
+    <body>
+        <div class="class-div">
+            <span>wl</span>
+            <ul>
+                <li>321</li>
+                <li>213</li>
+                <li>123</li>
+            </ul>
+        </div>
+    </body>
+    <script>
+        var log = function() {
+            console.log.apply(console, arguments)
+        }
+        var classDiv = document.querySelector(".class-div")
+        classDiv.addEventListener("click", function(event) {
+            var target = event.target
+            log("target", target)
+            var targetIH = target.innerHTML
+            log("targetHTML",target.innerHTML)
+
+        })
+    </script>
+</html>

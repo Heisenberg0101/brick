@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script src="Vue.js"></script>
+    </head>
+    <body>
+        <select id="select">
+            <option v-for="items of list">{{items}}</option>
+        </select>
+        <ul id="ul">
+            <li v-for="i of is">{{i}}</li>
+        </ul>
+        <script>
+            new Vue({
+                el: "#select",
+                data: {
+                    list: [1,2,3,4]
+                }
+            })
+            new Vue({
+                el: "#ul",
+                data: {
+                    is: [1,2,3,4]
+                }
+            })
+        </script>
+
+    </body>
+</html>

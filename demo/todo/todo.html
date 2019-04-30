@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Todo</title>
+    <style media="screen">
+      .done {
+          color: gray;
+          text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body>
+      <div class="todo-form">
+          <input id="id-input-todo" type="text" name="" value="">
+          <button id="id-button-add" type="" name="button">Add</button>
+      </div>
+      <div id="id-div-container">
+          <!-- <div class="todo-cell">
+              <button class="todo-done" >完成</button>
+              <button class="todo-delete" >删除</button>
+              <span class='todo-content' contenteditable="true">上课</span>
+          </div> -->
+      </div>
+      <script>
+          var idAdd = document.querySelector('#id-button-add')
+          idAdd.addEventListener("click",function() {
+              var idInputTodo = document.querySelector("#id-input-todo")
+              var todo = idInputTodo.value
+              addTodo(todo)
+              saveTodos()
+          })
+          var addTodo = function(todo, done) {
+              var t = templateTodo(todo, done)
+              var idDivContainer = document.querySelector("#id-div-container")
+              idDivContainer.insertAdjacentHTML("beforeend",t);
+          }
+          var templateTodo = function(todo,done) {
+              var c = ''
+              if(done) {
+                  c = "done"
+              }
+              var t = `<div class="todo-cell">
+                           <button class="todo-done" >完成</button>
+                           <button class="todo-delete" >删除</button>
+                           <span class='todo-content ${c}' contenteditable="true">${todo}</span>
+                     </div>`
+              return t
+          }
+          var idDivContainer = document.querySelector('#id-div-container')
+          idDivContainer.addEventListener("click", function(event) {
+              var target = event.target
+              if(target.classList.contains('todo-done')) {
+                  var todoCell = target.parentElement
+                  var todo = todoCell.children[2]
+                  toggleClass(todo, "done")
+              } else if(target.classList.contains("todo-delete")) {
+                  var todoCell = target.parentElement
+                  todoCell.remove()
+              }
+              saveTodos()
+          })
+          var toggleClass = function(element, className) {
+              if(element.classList.contains(className)) {
+                  element.classList.remove(className)
+              } else {
+                  element.classList.add(className)
+              }
+          }
+          var stringify = function(array) {
+              var s = JSON.stringify(array)
+              localStorage.todos = s
+          }
+          var parse = function() {
+            var s = localStorage.todos
+            return JSON.parse(s)
+          }
+          var saveTodos = function() {
+              //选出所有的content标签
+              console.log("hello")
+              var contents = document.querySelectorAll(".todo-content")
+              // 取出todo
+              var todos = []
+              for (var i = 0; i < contents.length; i++) {
+                  var c = contents[i]
+                  var done = c.classList.contains("done")
+                  var todo = {
+                    done: done,
+                    content: c.innerHTML,
+                  }
+                  todos.push(todo)
+              }
+              // 添加到一个数组中
+              // 保存数组
+              stringify(todos)
+          }
+          //函数 刷新页面读取localStorage.todos展示出来
+          var loadTodos = function() {
+          //反序列化 将字符串变成数组
+              var arr = parse()
+          //遍历数组
+              for (var i = 0; i < arr.length; i++) {
+                  var todo = arr[i]
+                  addTodo(todo.content, todo.done)
+              }
+          //
+          //
+          }
+          loadTodos()
+      </script>
+  </body>
+</html>

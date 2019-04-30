@@ -1,0 +1,33 @@
+!<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="jquery-2.1.0.min.js"></script>
+    <script src="./layui/layui.all.js"></script>
+</head>
+<body>
+    <button id="btn">111</button>
+    <div id="div" style="display:none">
+        777777
+        <span>
+            <button>2w2</button>
+        </span>
+    </div>
+</body>
+<script>
+    $('#btn').click(function(){
+        layui.use('layer', function(){
+        var layer = layui.layer;
+        layer.open({
+        type: 1,
+            content: $('#div') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+         });
+        });     
+    })
+             
+</script>
+</html>
