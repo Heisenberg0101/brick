@@ -32,6 +32,15 @@
 # d["a"]
 # 1
 
+# 循环
+for i in range(2):
+    print("hello")
+# 从零开始 打印出小于N的整数
+N = 10
+x = 0
+while x < N:
+    print x
+    x = x + 1
 #函数
 def my_abs(x):
     if x >= 0:
@@ -47,4 +56,13 @@ def fact(n):
     return n * fact(n-1)
 
 
-#
+# 斐波那契数列
+# 递归
+def fib(n):
+    if n==1:
+        return 1
+    if n==2:
+        return 1
+    if n>=3:
+        return fib(n-1)+fib(n-2)
+# 迭代
