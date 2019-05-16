@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>班级发布</title>
+  <link rel="stylesheet" href="../theme/layui/css/layui.css">
+  <link rel="stylesheet" href="css/news_reset.css">
+  <link rel="stylesheet" href="css/news_style.css">
+  <!-- 引入 WeUI -->
+  <link rel="stylesheet" href="./css/public.css">
+  <link rel="stylesheet" href="http://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
+  <link rel="stylesheet" href="css/baseNews.css">
+</head>
+<body id="news_add">
+<div class="wrap">
+  <div class="add-title">
+    <label for="" class="title">
+      <span>动态标题</span> <span class="spanicon">*</span>
+      <input type="text" name="" placeholder="填写标题" required class="text" id="news_title">
+    </label>
+    <div class="title">
+      <span>动态描述</span> <span class="spanicon">*</span>
+      <textarea placeholder="请输入" class="textarea" required id="news_description"></textarea>
+    </div>
+
+  </div>
+  <div class="add-imgs clearfix">
+    <div class="weui-uploader">
+      <div class="weui-uploader__bd">
+          <div class="weui-uploader__input-box" style="margin-left: 38%;">
+              <img class="weui-uploader__file" v-on="click:takephoto()">
+              <input type="hidden" id="newsadd_photo_name">
+              <input type="hidden" id="newsadd_photo_names">
+          </div>
+      </div>
+    </div>
+
+    <div id="news_newphoto">
+
+    </div>
+  </div>
+  <div class="scene clearfix">
+    <p id="news_organizeID">
+      <span v-repeat="organizeID: organizeID">
+          <input type="checkbox" value="{{organizeID.id}}" name="organizeID" id="organizeID{{organizeID.id}}" checked="yes">
+          <label for="organizeID{{organizeID.id}}">{{organizeID.name}}</label>
+      </span>
+
+    </p>
+  </div>
+  <div class="scene clearfix">
+    <p>分类<span class="spanicon">*</span>&nbsp;&nbsp;&nbsp;
+      <select id="news_type">
+        <option v-repeat="type: type" value={{type.id}}>{{type.name}}</option>
+      </select>
+    </p>
+  </div>
+
+  <div>
+    <div style="height: 56px;"></div>
+    <div class="submit">
+      <button v-on="click:addnews()" id="btn">提交</button>
+    </div>
+  </div>
+</div>
+<script src="js/jquery-2.1.0.min.js"></script>
+<!-- 引入layui -->
+<script src="../theme/layui/layui.js"></script>
+<!--<script src="https://cdn.ddddg.cn/vconsole.min.js"></script>-->
+<script src="js/getArgs.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script src="../js/server.js"></script>
+<script type="text/javascript" src="./js/layui/layui.all.js"></script>
+<script src="../bower_components/vue/dist/vue.min.js"></script>
+<script>
+  function readURL(input) {
+   if (input.files && input.files[0]) {
+       var reader = new FileReader();
+       reader.onload = function (e) {
+           $('#blah').attr('src', e.target.result);
+       }
+       reader.readAsDataURL(input.files[0]);
+   }
+}
+$("#imgInp").change(function(){
+   readURL(this);
+});
+</script>
+<script type="text/javascript">
+    var localIds = [];
+    var index = 0;
+    var news_add = new Vue({
+        el: '#news_add',
+        data: {
+            type:null,
+            lists: null,
+            organizeID:null,
+            serverIds:'',
+        },
+         methods:{
+          // 新闻发布
+            addnews: function () {
+              // 获取表单数据
+              $('#btn').attr('disabled',true);
+              var uid = args.u;
+              var title = $("#news_title").val();
+              var description = $("#news_description").val();
+              var type = $("#news_type").val();
+              var organizeIDs = [];
+              $('input[name="organizeID"]:checked').each(function(){
+                organizeIDs.push($(this).val());
+              });
+              var organizeID = organizeIDs.join(',');
+              var serverIds= news_add.serverIds;
+              // 发送给后台添加
+              $.ajax({
+                  type: "POST",
+                  url: '/classplate-API/api/classAdd',
+                  data:{title:title, description:description, type:type, serverId:serverIds, u:uid, organizeID:organizeID},
+                  success: function(data) {
+                      // 获取新数据赋值
+                      news_add.type = data.type;
+                      news_add.organizeID = data.organizeID;
+                      // 清空输入框
+                      $("#news_title").val('');
+                      $("#news_description").val('');
+
+                      layer.alert('添加成功', {icon: 1}, function(){
+                          location.href = './classNewsList.html?' + 'u=' + uid;
+                      });
+                  },
+                  error: function(response) {
+                      layer.alert('添加失败,请重试', {icon: 2});
+                  },
+              });
+            },
+            takephoto: function () {
+             if($('.mienbox').length>=6){
+                alert('你最多只能选择6张照片！');
+                return;
+              }
+              var num = 6 - $('.mienbox').length;
+              wx.chooseImage({
+                  count: num, // 默认9
+                  sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                  sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                  success: function (res) {
+                      localIds = res.localIds;
+                      for (var i = 0; i < localIds.length; i++) {
+                        $('#news_newphoto').append('<div class="mienbox"><img src="' + localIds[i] + '" class="layui-upload-img" style="height: 100%;"><div class="close">×</div></div>');
+                      }
+                      syncUpload();
+                  }
+              });
+            },
+        },
+        ready() {
+            var uid = args.u;
+            $.ajax({
+                type: 'GET',
+                url: '/classplate-API/api/classAdd',
+                data:{u: uid},
+                success: function(data){
+                    news_add.type = data.type;
+                    news_add.organizeID = data.organizeID;
+                },
+                error: function(response) {
+                    alert('列表加载失败，请重试');
+                },
+            });
+            $.ajax({
+                type: 'GET',
+                url: '/classplate-API/api/getJSSDK',
+                data: {
+                    url: location.href
+                },
+                success: function(data) {
+                    wx.config({
+                        beta:true,
+                        debug: false,
+                        appId: data.appId,
+                        timestamp: data.timestamp,
+                        nonceStr: data.nonceStr,
+                        signature: data.signature,
+                        jsApiList: ['chooseImage', 'uploadImage']
+                    });
+                }
+            });
+        }
+    })
+
+  //图片上传
+  function syncUpload() {
+      var localId = localIds.pop();
+      wx.uploadImage({
+          localId: localId,
+          success: function(res) {
+            serverId = res.serverId; // 返回图片的服务器端ID
+            news_add.serverIds = news_add.serverIds + serverId + ',';
+            syncUpload();
+          }
+      });
+    }
+
+  //删除图片
+  $('#news_newphoto').on('click','.close',function(){
+    var img = $(this).parent().find('img').attr('src');
+    for(var i=0;i<$('.close').length;i++){
+        if(img == $('.close').parent().eq(i).find('img').attr('src')){
+          index = i;
+        }
+    }
+    news_add.serverIds = news_add.serverIds.split(',');
+    news_add.serverIds.splice(index,1);
+    news_add.serverIds = news_add.serverIds.join(',');
+
+    $(this).parent().remove();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <title>开始评价</title>
+  <link rel="stylesheet" href="./js/layui/css/layui.css">
+  <link rel="stylesheet" href="bootstrap/bootstrap.css">
+  <link rel="stylesheet" href="./css/workAttendance.css">
+  <link rel="stylesheet" href="./css/startEvaluation.css">
+</head>
+</html>
+<body>
+  <div id="evaluation">
+    <div class="evaluation-one">
+       <div class="startEvaluation" id="accordion">
+       <!--  <div class="namelist">
+            <span v-repeat="people:people">@{{people}}</span>
+        </div> -->
+        <div>
+          <a class="arrow" data-toggle="collapse" data-parent="#accordion"
+               href="#collapseTwo"><i class="layui-icon layui-icon-down"></i></a>
+          <div id="collapseTwo" class="allnamelist collapse">
+            <span v-repeat="people:people">@{{people}}</span>
+          </div>
+        </div>
+      </div>
+      <div id="accordion1" style="margin-bottom: 60px;">
+        <ul>
+          <li v-repeat="item:project">
+              <a class="typelist" data-toggle="collapse" data-parent="#accordion1"
+               href="#eva{{item.id}}">
+                 {{item.medalName}}<span><i class="layui-icon layui-icon-right"></span></i>
+              </a>
+             <!--  <button class="typelist" type="button" data-toggle="collapse" data-target="#eva{{item.id}}" aria-controls="#eva{{item.id}}" aria-expanded="false" aria-label="Toggle navigation">
+                  {{item.medalName}}<span><i class="layui-icon layui-icon-right"></span></i>
+              </button> -->
+              <div id="eva{{item.id}}" class="collapse">
+                <div class="evatype" v-repeat="son:item.gradeItem" id="son_{{son.id}}" sId="{{son.id}}" >
+                    <div class="evatype_top" v-on="click:chooseThis(item.id, son.id)">
+                      <img src="{{son.pic}}" alt="">
+                    </div>
+                    <div class="evatype_bottom">
+                        {{son.name}}  {{son.score}}
+                    </div>
+                </div>
+                <!-- falsevatype -->
+              </div>
+          </li>
+
+        </ul>
+
+        <div>
+          <div style="height: 117px;"></div>
+          <div class="btn opt-btn">
+            <div class="opt">
+              <div class="opt-input">
+              <img src="./image/bookCont.png"><span>请输入评价内容</span>
+              </div>
+              <div class="opt-open" v-on="click:showTo">
+              <img src="./images/ic_select.png">
+              </div>
+            </div>
+            <button class="layui-btn" v-on="click:saveEvalution();" id="submit">提交</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="evaluation-two">
+      <div class="two-Box">
+          <textarea v-model="memo"></textarea>
+          <div class="two-up-img" v-on="click:set_image()">
+            <img src="./image/two-up-img.png"><span class="two-title">上传图片</span>
+          </div>
+          <div class="two-up-img">
+            <img src="./image/two-up-person.png" class="two-big-img"><span class="two-title">谁可以看</span>
+            <span v-show="open == true" v-on="click:toggleOpen()" class="two-show">
+              <img src="./image/open.png" width="18px" height="18px"> <span style="color: #8a8a8a"> 公开</span>
+            </span>
+            <span v-show="open == false" v-on="click:toggleOpen()" class="two-show">
+              <img src="./image/secret.png" width="13px" height="13px"> <span style="color: #8a8a8a"> 私密</span>
+            </span>
+          </div>
+          <div class="up-imgs">
+          </div>
+      </div>
+      <div class="two-btn" v-on="click:hideTo">
+          <div style="height: 65px;">
+
+          </div>
+          <div class="operate">
+              <center>
+                  <button>确定</button>
+              </center>
+          </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript" src="./js/jquery-2.1.0.min.js"></script>
+<script src="../bower_components/vue/dist/vue.min.js"></script>
+<script src="./bootstrap/bootstrap.min.js"></script>
+<script src="../theme/layui/layui.js"></script>
+<script src="../js/server.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="./js/getArgs.js"></script>
+<script src="./js/layui/layui.all.js"></script>
+<script src="./js/startEvaluation.js?v=1.2.4"></script>
+</body>
+</html>

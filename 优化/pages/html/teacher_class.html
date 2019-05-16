@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>课程管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <link rel="stylesheet" href="../lib/layui/css/layui.css"></script>
+    <link rel="stylesheet" href="./css/bigpic.css">
+    <link rel="stylesheet" href="./css/baseStyle.css">
+    <link rel="stylesheet" href="./css/couseManager.css">
+  </head>
+  <body class="layui-anim layui-anim-up" id="subject">
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">课程</a>
+        <a>
+          <cite>课程管理</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style='text-align: center;
+line-height: 38px;'>刷新</i>  </a>
+    </div>
+    <div class="x-body">
+      <xblock>
+        <button class="layui-btn" v-on="click:createSubject()" style="text-align: center;">新增课程</button>
+        <button class="layui-btn" style="text-align: center;" v-on="click:choosetype()">查看全部</button>
+        <button class="layui-btn" style="text-align: center;" v-on="click:choosetype(0)">查看{{project1}}</button>
+        <button class="layui-btn" style="text-align: center;" v-on="click:choosetype(1)">查看{{project2}}</button>
+        <button class="layui-btn" style="text-align: center;" v-on="click:choosetype(2)">查看教学管理</button>
+      </xblock>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th style="text-align:center">序号</th>
+            <th style="text-align:center">课程名称</th>
+            <th style="text-align:center">课程名类型</th>
+            <th style="text-align:center">操作</th>
+        </thead>
+        <tbody>
+          <tr v-repeat="subjects:subjects">
+            <td style="text-align:center">{{$index+1}}</td>
+            <td style="text-align:center">
+               {{subjects.name}}
+            </td>
+            <td style="text-align:center">{{subjects.type}}</td>
+            <td style="text-align:center">
+              <button class="layui-btn layui-btn-danger" v-on="click: removeProject(subjects.id,subjects.name)"><i class="layui-icon"></i>删除</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 新增课程 -->
+    <div class="addCourse">
+      <div class="layui-form-item item">
+        <label class="layui-form-label">课程类型：</label>
+        <div class="layui-input-block">
+          <select id="type" lay-filter="aihao">
+            <option value="">请选择课程类型</option>
+            <option value="0">{{project1}}</option>
+            <option value="1">{{project2}}</option>
+            <option value="2">教学管理</option>
+          </select>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程名称：</label>
+        <div class="layui-input-block">
+          <input id="name"  placeholder="请填写课程名称" class="layui-input" type="text">
+        </div>
+      </div>
+      <div class="butt">
+        <button class="layui-btn" v-on="click:sub()">提交</button>
+      </div>
+    </div>
+
+    <script src="../js/server.js"></script>
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/layui/layui.all.js"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>
+    <script src="../js/vue/dist/vue.min.js"></script>
+    <script type="text/javascript">
+      $(function(){
+            var subject = new Vue({
+            el:"#subject",
+            data:{
+               subjects:null,
+               auth:null,
+               stage:0,
+               project1:'',
+               project2:''
+            },
+            methods:{
+                //新增课程
+                createSubject: function() {
+                      ope('新增课程','.addCourse','370px','335px');
+                  },
+                choosetype:function(id){
+                  var type = id;
+                  $.ajax({
+                    type: "GET",
+                    url: baseURL + '/project',
+                    data:{type:type},
+                    success: function(response) {
+                        subject.subjects = response;
+                    },
+                    error: function(response) {
+                       layui.use('layer', function(){
+                            var layer = layui.layer;
+                            layer.msg('课程信息获取失败 !', {icon: 5});
+                          });
+                    }
+                  });
+                },
+                sub:function(){
+                	var type = $("#type").val();
+                	var name = $("#name").val();
+                	if (!type) {
+                		alert("请选择课程类型！");
+                		return;
+                	}
+                	if (!name) {
+                		alert("请填写课程名称！");
+                		return;
+                	}
+                	$.ajax({
+		                type: "POST",
+		              	url: baseURL + '/project',
+		              	data:{type:type,
+		              		  name:name
+		              		},
+		              	success: function(response) {
+		              		layui.use('layer', function(){
+		                      	var layer = layui.layer;
+		                      	layer.msg('新增成功 !', {icon: 1});
+		                    });
+		                  	subjectajax();
+                        layer.closeAll('page');
+		              	},
+		              	error: function(response) {
+		                 	layui.use('layer', function(){
+		                      	var layer = layui.layer;
+		                      	layer.msg('课程新增失败 !', {icon: 5});
+		                  });
+		                }
+		              });
+                },
+                // 删除课程
+                removeProject: function(id,name) {
+                  layer.confirm("确认删除？", {fixed: false, shade: false}, function(){
+                      //删除
+                      $.ajax({
+                        type: "DELETE",
+                        url: baseURL + '/project/' + id,
+                        success: function(response) {
+                            layer.alert("删除成功！")
+                          // 在显示的课程上删除
+                          subjectajax();
+                        },
+                        error: function(response) {
+                              layui.use('layer', function(){
+                                var layer = layui.layer;
+                                layer.msg('无法删除课程表中的课程 !', {icon: 5});
+                              });
+
+                        }
+                      });
+                  })
+
+                },
+
+            }
+        })
+        //初始化课程列表
+        subjectajax();
+        function subjectajax(){
+            //获取课程列表
+            $.ajax({
+              type: "GET",
+              url: baseURL + '/project',
+              success: function(response) {
+                  subject.subjects = response;
+                  //alert(JSON.stringify(response));
+              },
+              error: function(response) {
+                 layui.use('layer', function(){
+                      var layer = layui.layer;
+                      layer.msg('课程信息获取失败 !', {icon: 5});
+                    });
+              }
+            });
+            //判断是否是幼儿园，幼儿园课程类型为普适性课程和园本课程
+            $.ajax({
+              type: "GET",
+              url: baseURL + '/schoolInformationShow',
+              success: function(response) {
+                  subject.stage = response[0].stage;
+                  if (subject.stage=='4') {
+                    subject.project1 = '普适性课程';
+                    subject.project2 = '园本课程';
+                  }else{
+                    subject.project1 = '国家课程';
+                    subject.project2 = '校本课程';
+                  }
+              },
+            });
+        }
+        //检查权限
+        authCheck();
+        function authCheck(){
+          $.ajax({
+              type: "GET",
+              url: baseURL + '/authCheck',
+              data:{action:"teacherClass/edit"},
+              success: function(data) {
+                  subject.auth = data.auth;
+              },
+              error: function(response) {
+                  layer.alert('失败,请重试',{
+                      icon : 2,
+                  })
+              },
+          });
+        }
+      });
+
+  //弹窗
+  function ope(title,obj,width,height){
+      layui.use('layer',function(){
+      var layer = layui.layer;
+        layer.open({
+        type: 1,
+        title:title,
+        area: [width, height],
+        content: $(obj),
+        shadeClose: true,
+        fixed: false,
+        shade: false,
+        end: function(index, layero){
+           $(obj).css({display:"none"});
+        },
+      });
+    });
+   }
+    </script>
+  </body>
+
+
+</html>

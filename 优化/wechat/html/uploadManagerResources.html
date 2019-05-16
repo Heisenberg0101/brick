@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>上传资源</title>
+  <link rel="stylesheet" href="./js/layui/css/layui.css">
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/public.css">
+  <link rel="stylesheet" href="./css/uploadResources.css">
+</head>
+<body id="uploadResources">
+  <div class="uploadBox">
+    <div class="sources">
+      <div class="sources_left">
+        选择课本
+      </div>
+      <div class="sources_right">
+        <div class="layui-inline">
+          <div class="layui-input-inline">
+            <select name="bookId" id="bookId" v-model="bId" disabled="disabled">
+              <option value="">请选择课本</option>
+              <option value="{{bookLists.id}}" v-repeat="bookLists: bookLists">{{bookLists.bookName}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        选择章
+      </div>
+      <div class="sources_right">
+        <div class="layui-inline">
+          <div class="layui-input-inline">
+            <select name="zhangId" id="zhangId" v-model="zId" disabled="disabled">
+              <option value="">请选择章</option>
+              <option value="{{chapterList.id}}" v-repeat="chapterList: chapterLists">{{chapterList.cName}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        选择节
+      </div>
+      <div class="sources_right">
+        <div class="layui-inline">
+          <div class="layui-input-inline">
+            <select name="jieId" id="jieId" v-model="jId" disabled="disabled">
+              <option value="">请选择节</option>
+              <option value="{{nodeList.id}}" v-repeat="nodeList: nodeLists">{{nodeList.cName}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        资源类型
+        <span class="spanicon">*</span>
+      </div>
+      <div class="sources_right types">
+        <input type="radio" name="books" value="0"><span>课件</span>
+        <input type="radio" name="books" value="1"><span>教案</span>
+        <input type="radio" name="books" value="2"><span>其他</span>
+      </div>
+    </div>
+    <div class="sources sourcesUpload">
+      <div class="sources_left">
+        资源上传
+        <span class="spanicon">*</span>
+      </div>
+      <div class="sources_right testListBox">
+        <div id="testList" v-on="click:set_image();">
+           <img src="./img/camera.png">
+        </div>
+
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        资源名称
+        <span class="spanicon">*</span>
+      </div>
+      <div class="sources_right">
+        <input type="text" id="resName" placeholder="请输入资源名称">
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        其他资源
+      </div>
+      <div class="sources_right">
+        <input type="text" id="other_url" placeholder="请输入资源网址">
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        共享到学校
+      </div>
+      <div class="sources_right types">
+        <input type="checkbox" id="schoolShare"><span>学校共享</span>
+        <input v-if="schoolNice==true" type="checkbox" id="schoolNice"><span v-if="schoolNice==true">学校精品</span>
+      </div>
+    </div>
+    <div class="sources" v-if="organizeID!=''">
+      <div class="sources_left">
+        共享到班级
+      </div>
+      <div class="sources_right types" v-repeat="organizeID: organizeID">
+         <input type="checkbox" value="{{organizeID.id}}" name="organizeID" id="organizeID{{organizeID.id}}" >
+         <label for="organizeID{{organizeID.id}}">{{organizeID.name}}</label>
+      </div>
+    </div>
+    <div class="sources" v-if="areaShare==true">
+      <div class="sources_left">
+        共享到区级
+      </div>
+      <div class="sources_right types">
+        <input type="checkbox" id="areaShare"><span>区级共享</span>
+      </div>
+    </div>
+
+    <!-- 遮罩 -->
+    <div class="bak"></div>
+
+   <div class="operate">
+      <center><button v-on="click: sub()" class="btn btn-primary btn-lg" id="id-sub"><span class="fonts">提交</span></button></center>
+  </div>
+  </div>
+</body>
+
+<script src="./js/jquery-2.1.0.min.js"></script>
+<script src="../bower_components/vue/dist/vue.min.js"></script>
+<script src="../js/server.js"></script>
+<script src="./js/getArgs.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="./js/layui/layui.all.js"></script>
+<script type="text/javascript" src="./js/uploadManagerResources.js"></script>
+</html>

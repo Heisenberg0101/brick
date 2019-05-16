@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>发布</title>
+  <link rel="stylesheet" href="../theme/layui/css/layui.css">
+  <link rel="stylesheet" href="css/news_reset.css">
+  <link rel="stylesheet" href="css/news_style.css">
+  <link rel="stylesheet" href="http://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
+  <link rel="stylesheet" href="./css/public.css">
+  <link rel="stylesheet" href="css/integratedCoursesAdd.css">
+  <style>
+    .submit a {
+        background: #338DFE;
+      }
+    .img{
+        border:0;
+    }
+    .weui-uploader__bd {
+        margin-top: 5px;
+        overflow: visible;
+    }
+    .picBox .intEdit_pic{
+    	float: left;
+      width: 77px;
+      height: 77px;
+  		position: relative;
+  		margin-right: 9px;
+  		margin-bottom: 9px;
+    }
+    .picBox .intEdit_pic img{
+    	width: 100%;
+  		height: 100%;
+  		background-size: 100%;
+    }
+    .close{
+      position: absolute;
+      right: -3px;
+      top: -5px;
+      background: red;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      line-height: 20px;
+      border-radius: 100%;
+      color: #fff;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body id="course_add">
+<div class="wrap">
+  <div class="add-title">
+    <label for="" class="title">
+      <span>标题</span> <span class="spanicon">*</span>&nbsp;&nbsp;&nbsp;
+      <select id="zhangId">
+          <option value="">请选择标题</option>
+          <option value="{{chapterList.cName}}" v-repeat="chapterList: chapterLists">{{chapterList.cName}}</option>
+      </select>
+    </label>
+    <div class="zhangInput">
+      <span class="hideSpan">标题</span> <span class="spanicon hideSpan">*</span>&nbsp;&nbsp;&nbsp;
+      <input type="text" id="mName" class="text" placeholder="填写标题">
+    </div>
+    <!-- <textarea id="description" placeholder="请填写内容描述" class="textarea"></textarea> -->
+  </div>
+
+ <!--  <div class="add-imgs clearfix">封面图片
+    <div class="weui-uploader">
+      <div class="weui-uploader__bd honorPic">
+          <div class="weui-uploader__input-box">
+              <img class="weui-uploader__file">
+              <input type="hidden" id="newsadd_photo_name">
+              <input type="hidden" id="newsadd_photo_names">
+          </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="add-imgs clearfix">场景图片
+    <div class="weui-uploader">
+      <div class="weui-uploader__bd">
+          <div class="weui-uploader__input-box">
+              <img class="weui-uploader__file" v-on="click: set_image(data, $event, &quot;home&quot;)">
+              <input type="hidden" id="newsadd_photo_name">
+              <input type="hidden" id="newsadd_photo_names">
+          </div>
+          <div class="picBox">
+
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene clearfix">
+    <p>选择场景<span class="spanicon">*</span>&nbsp;&nbsp;&nbsp;
+      <select id="mType">
+        <!-- <option>课程简介</option> -->
+        <option>课程实施</option>
+        <option>课程成果</option>
+      </select>
+    </p>
+  </div>
+
+  <div class="submit">
+    <a href="javascript:;" v-on="click:sub()" id="id-sub">提交</a>
+  </div>
+</div>
+<script src="js/jquery-2.1.0.min.js"></script>
+<script src="../theme/layui/layui.js"></script>
+<script src="js/getArgs.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="../theme/layui/layui.js"></script>
+<script src="../js/server.js"></script>
+<script src="../bower_components/vue/dist/vue.min.js"></script>
+<script type="text/javascript">
+    var src = window.location.href;
+    var first = src.indexOf('?u=');
+    var openID = src.substr(first + 3);
+    var localIds = [];
+    //保存上传图片地址
+    var photots = new Array();
+    var photos = null;
+    var course_add = new Vue({
+        el: '#course_add',
+        data: {
+          src:[],
+          chapterLists:null
+        },
+         methods:{
+            set_image: function(sub, e, types) {
+              if($(".picBox .intEdit_pic").length>=6){
+                alert('你最多只能选择6张照片！');
+                return;
+              }
+              var num = 6 - $(".picBox .intEdit_pic").length;
+
+              wx.chooseImage({
+                count: num, // 默认9
+                sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function(res) {
+                  localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                  syncUpload();
+                },
+
+              });
+            },
+          sub:function(){
+                $("#id-sub").attr("disabled", true)
+                var mName = $("#mName").val();
+                var mType = $("#mType").val();
+                var len = $(".picBox .intEdit_pic").length;
+                for(var i=0;i<len;i++){
+                  var img = $(".picBox .intEdit_pic").eq(i).find('img').attr('src');
+                  course_add.src.push(img);
+                }
+                course_add.src = course_add.src.join(',');
+
+                //标题不能为空
+                if(!mName){
+                   opeFail("请填写标题！",5);
+                   return;
+                }
+                //保存数据
+                $.ajax({
+                  type:"POST",
+                  url: baseURL + '/saveMaterial',
+                  data:{
+                        mName:mName,
+                        mType:mType,
+                        picUrl:course_add.src,
+                        openID:openID
+                       },
+                  success:function(response){
+                      layui.use('layer', function(){
+                        var layer = layui.layer;
+                        layer.alert('添加成功！',{icon:1},function(){
+                             window.location.href="integratedCoursesList.html?u=" + openID;
+                        });
+                      });
+
+
+                  },
+                  error:function(response){
+                    layer.alert("保存失败！",{icon:2});
+                  }
+              });
+            }
+        },
+    })
+
+  //获取该教师所绑定的选修课课本
+  init();
+  function init(){
+    $.ajax({
+        type: "GET",
+        url: baseURL + '/chapterForTeacher',
+        data:{
+          openID:openID
+        },
+        success: function(data) {
+          course_add.chapterLists = data;
+        },
+        error: function(response) {
+          // layer.alert('章加载失败，请重试',{
+          //   icon : 2,
+          // })
+          alert('章加载失败，请重试!');
+        },
+    });
+  }
+
+  //选择的章赋值给标题
+  $("#zhangId").bind("change",function(){
+    var zhangId = $("#zhangId").val();
+    $("#mName").val(zhangId);
+  });
+
+  //失败提示弹窗
+  function opeFail(text,num){
+    layui.use('layer', function(){
+      var layer = layui.layer;
+      layer.alert(text,{icon:num});
+    });
+  }
+
+ function syncUpload() {
+      var localId = localIds.pop();
+      wx.uploadImage({
+          localId: localId,
+          success: function(res) {
+               var serverId = res.serverId; // 返回图片的服务器端ID
+               $.ajax({
+                  type: 'POST',
+                  url: baseURL + '/downloadImages1',
+                  data: {
+                    media_id: serverId
+                  },
+                  success: function(data) {
+                          // course_add.src.push(baseURL +'/public'+ data.filelink);
+
+                          if($(".picBox .intEdit_pic").length <6){
+                             $(".picBox").append('<div class="intEdit_pic"><img src="'+baseURL +'/public'+ data.filelink+'"><div class="close">×</div></div>');
+                          }else{
+                             alert('最多上传6张图');
+                          }
+                  },
+                  error: function(res) {
+                    alert("下载图片到服务器时出错：" + localImageID + " " + JSON.stringify(res));
+                  }
+                });
+              syncUpload();
+          }
+      });
+    }
+
+  //删除图片
+  $(".picBox").on('click','.close',function(){
+    $(this).parent().remove();
+  });
+
+  // 微信JS-SDK
+  $.ajax({
+    type: 'GET',
+    url: baseURL + '/getJSSDK',
+    data: {
+      url: location.href
+    },
+    success: function(data) {
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: data.appId, // 必填，公众号的唯一标识
+        timestamp: data.timestamp, // 必填，生成签名的时间戳
+        nonceStr: data.nonceStr, // 必填，生成签名的随机串
+        signature: data.signature, // 必填，签名，见附录1
+        jsApiList: ['chooseImage', 'uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+      });
+    }
+  });
+</script>
+</body>
+</html>

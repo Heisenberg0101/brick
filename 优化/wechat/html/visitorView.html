@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>访客详情</title>
+  <link rel="stylesheet" href="css/meetreset.css">
+  <link rel="stylesheet" href="css/meetstyle.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
+  <link rel="stylesheet" href="./js/need/layer.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="deatil-top"></div>
+  <div class="meeting-title">
+    <div class="img">
+       <img src="images/ic_meeting_03.png" class="avatar">
+    </div>
+    <div class="time">
+      <p>访客姓名：{{views.name}}</p>
+      <p>访客电话：{{views.phone}}</p>
+      <p>来访事由：{{views.reason}}</p>
+    </div>
+  </div>
+
+  <div class="meeting-con">
+    <div class="item">
+      <ul>
+        <li><p>{{views.name}} &nbsp;&nbsp;&nbsp;发起申请</p> <span>{{views.save_Time}}</span></li>
+        <li v-show="views.status != '待审核'"><p>{{views.reception}} &nbsp;&nbsp;&nbsp;{{views.status}}</p> <span>{{views.accept_time}}</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="meeting-con" v-show="views.status == '待审核' || views.status == '同意访问'">
+    <div class="item">
+        <span>选项操作：</span>
+        <input type="text" v-model="views.operate" id='picker' placeholder="请选择(必选)"/>
+    </div>
+  </div>
+  <a href="#" class="btn" v-show="views.status == '待审核' || views.status == '同意访问'"><img src="images/btn_preserve.png" class="save" v-on="click: savePage()" id="id-savePage"></a>
+</div>
+<script src="js/jquery-2.1.0.min.js"></script>
+<script src="./js/layer.js"></script>
+<script>
+  // 加载层
+  // index = layer.open({
+  //   type: 2
+  //   ,content: '加载中'
+  //   ,shadeClose: false
+  // });
+</script>
+<script src="../bower_components/vue/dist/vue.min.js"></script>
+<script src="../js/server.js"></script>
+<script src="./js/getArgs.js"></script>
+<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.min.js"></script>
+<script src="./js/layui/layui.all.js"></script>
+<script src="./js/visitorView.js"></script>
+</body>
+</html>

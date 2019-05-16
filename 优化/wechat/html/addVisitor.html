@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <title>访客申请</title>
+  <link rel="stylesheet" href="css/meetreset.css">
+  <link rel="stylesheet" href="css/meetstyle.css">
+  <!-- <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css"> -->
+<!--   <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
+
+ -->
+ <link rel="stylesheet" href="./css/jquery-weui.min.css">
+ <link rel="stylesheet" href="./js/need/layer.css">
+  <style>
+      .btn-primary {
+        background-color: #348DFE;
+        border-color: #348DFE;
+        border-radius: 5px;
+    }
+    .btn-primary:hover {
+       background-color: #338DFE;
+        border-color: #338DFE;
+        border-radius: 5px;
+}
+    .btn {
+    display: inline-block;
+    padding: 0
+    margin-bottom: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    border-radius: 4px;
+    color: #fff;
+}
+  </style>
+</head>
+<body>
+<div class="warp">
+  <div class="head"></div>
+  <div class="meetcontent">
+    <div class="img">
+       <img src="images/ic_meeting_03.png" class="avatar">
+    </div>
+   <form action="" method="get" accept-charset="utf-8" class="form">
+    <label>
+      <span>姓名：</span>
+      <input type="text" v-model="data.name" placeholder="请输入姓名(必填)">
+    </label>
+    <label>
+      <span>电话：</span>
+      <input type="text" v-model="data.phone" placeholder="请输入电话(必填)">
+    </label>
+    <label1 style="display: block; padding: 15px 0; border-bottom: 1px solid #e8e8e8; font-size: 13px; position: relative; color: #333;">
+      <span>验证码：</span>
+      <input type="text" v-model="data.code" id="code" placeholder="请输入短信验证码">
+      <button type="button" class="btn btn-primary" style="font-size: 12px;position: absolute;right: 2px;top: 11px;height: 26px;width: 76px;text-align: center;line-height: 26px;" v-on="click:sendSMS()">获取验证码</button>
+    </label1>
+    <label>
+      <span>事由：</span>
+      <input v-model="data.reason" type="text" id='picker' placeholder="请选择(必选)"/>
+    </label>
+    <label class="last">
+      <textarea v-model="data.remake" placeholder="请填写备注(选填)" class="textarea"></textarea>
+    </label>
+      <form action="" method="post">
+        <div class="choose-screening-input">
+          <span style="line-height: 60px;margin-left: 15px">接待老师：</span> <input v-model="data.reception" name="reception"  type="text" id="chooseCity" placeholder="输入教师查询">
+          <div class="auto-screening auto-hidden" id="autoScreening"></div>
+        </div>
+      </form>
+    <a href="#" class="btn" v-on="click: savePage()" id="id-savePage"><img src="images/btn_preserve.png" class="save"></a>
+   </form>
+  </div>
+</div>
+<script src="js/jquery-2.1.0.min.js"></script>
+<script src="./js/layer.js"></script>
+<!--<script>
+  // 加载层
+  index = layer.open({
+    type: 2
+    ,content: '加载中'
+    ,shadeClose: false
+  });
+</script>-->
+<script src="../bower_components/vue/dist/vue.min.js"></script>
+<script src="../js/server.js"></script>
+<script src="./js/getArgs.js"></script>
+<script src="./js/jquery-2.1.0.min.js"></script>
+<script src="./js/jquery-weui.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<!-- <script src="./js/layui/layui.all.js"></script> -->
+<script src="./js/addVisitor.js"></script>
+<script>
+  var win_h = $(window).height();
+  $("body").height(win_h);
+  // 获取教师姓名
+  $.ajax({
+    type: 'POST',
+    url: baseURL + '/searchAllTeacher',
+
+    success: function(data) {
+      var arr = [];
+      arr = data;
+      $("#chooseCity").bind('input propertychange',function(){
+    var arrNew = [];
+    var i;
+    for(i=0;i<arr.length;i++){
+      var arrItems=arr[i];
+    　　  /*判断元素是否存在于arrNew中，如果不存在则插入到arrNew的最后*/
+    　　  if($.inArray(arrItems,arrNew)==-1) {
+    　　　　    arrNew.push(arrItems);
+        /*console.log(arrNew);*/
+      }
+    }
+    /*这是将input中输入的数据有关联的全部加入新生成的div中显示出来*/
+    for(i=0;i<arrNew.length;i++){
+      var arrWord = arrNew[i].toString();
+      /*console.log(arrWord);*/
+      if(((arrWord.indexOf($('#chooseCity').val())) > -1) && ($('#chooseCity').val().length > 0)){
+        var addArrWord = "<div class=auto-screening-prompt>" + arrWord + "</div>";
+          $("#autoScreening").append(addArrWord);
+          $("#autoScreening").removeClass("auto-hidden");
+      }
+    }
+    /*将显示出来的div的内容去重复，input内容变动时去重复*/
+    $(".auto-screening-prompt").each(function(){
+      if($(this).text().indexOf($('#chooseCity').val()) < 0){
+        $(this).remove();
+      }
+      else if($('#chooseCity').val().length == 0){
+        $("#autoScreening").addClass("auto-hidden");
+        $(".auto-screening-prompt").remove();
+      }
+    });
+    /*弹出的提示div去重复*/
+    $(".auto-screening-prompt").each(function(i, iText){
+            var iTextHtml = iText.innerHTML;
+            $(".auto-screening-prompt").each(function(j, jText){
+                var jTextHtml = jText.innerHTML;
+                if (i < j && iTextHtml == jTextHtml) {
+                    $(this).remove();
+                }
+            });
+        });
+    /*点击div获取文本传值*/
+    $(".auto-screening-prompt").on("click",function(){
+      $("#chooseCity").val($(this).text());
+      $("#autoScreening").addClass("auto-hidden");
+      $(".auto-screening-prompt").remove();
+    })
+  })
+
+    },
+    error: function(data){
+      alert(JSON.stringify(data));
+    }
+  });
+  // 事由
+  $("#picker").picker({
+  title: "来访事由",
+  cols: [
+    {
+      textAlign: 'center',
+      values: ['参观交流', '莅临指导', '工作沟通', '家校沟通']
+    }
+  ]
+});
+</script>
+</body>
+</html>

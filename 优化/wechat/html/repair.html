@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, userscalable=no">
+    <title>新增报修</title>
+    <link rel="stylesheet" href="../theme/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="./css/public.css">
+    <link rel="stylesheet" href="./css/repair.css">
+  </head>
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+      background-color: #EBEBEB;
+    }
+    .box{
+      width: 96%;
+      background-color: #EBEBEB;
+      margin: 0 auto;
+    }
+    .content {
+      float:left;
+    }
+    .content .photo{
+      float: left;
+      background-position:center;
+      position: relative;
+      background-size:cover ;
+    }
+    .btn-primary{
+       background-color: #33AEFE;
+        border-color: #33AEFE;
+    }
+  .btn-primary:hover{
+    background-color: #3391FE;
+    border-color: #3391FE;
+  }
+ </style>
+<body>
+     <div class="box">
+         <div class="input-style">
+              <span class="navbar-brand" href="#" style="color:black;font-size: 16px;">报修物品 <span class="spanicon">*</span></span>
+              <input v-model="data.goods" placeholder="如: 办公桌" class="input-place"></input>
+          </div>
+
+          <div class="input-style">
+              <span class="navbar-brand" href="#" style="color:black;font-size: 16px">报修地点 <span class="spanicon">*</span></span>
+              <input v-model="data.place" placeholder="如: 教学楼" class="input-place"></input>
+          </div>
+
+          <div class="input-stylea" style="background: #fff">
+            <span class="navbar-brand" href="#" style="color:black;font-size: 16px">报修事由 <span class="spanicon">*</span></span>
+            <textarea class="input-textarea" v-model="data.reason" placeholder="请输入"></textarea>
+          </div>
+
+
+          <div class="images">
+            <div class="set-img">
+            <div class="content">
+              <!-- <div v-style="data.background" class="photo"></div> -->
+              <div style="float: left;margin-left: 10px"><img v-on="click: set_image(data, $event, &quot;home&quot;)" src="./img/camera.png"></div>
+              <div class="photo">
+
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <div class="choose-people" id="people" >
+            <span style="margin-left:10px">维修人员 <span class="spanicon">*</span></span>&nbsp;&nbsp;&nbsp;
+            <select v-model="data.people" name="fruit" >
+              <option  >请选择</option>
+              <option  v-repeat="people: peoples">{{people.name}}</option>
+
+            </select>
+          </div>
+
+        <div>
+           <div style="height: 65px;">
+           </div>
+           <div class="operate">
+              <center><button id="saveBtn" v-on="click: savePage()" class="btn btn-primary btn-lg"><span class="fonts">提交报修</span></button></center>
+           </div>
+        </div>
+
+     </div>
+
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <!-- <script src="../bower_components/jquery/dist/jquery.min.js"></script> -->
+    <script src="../bower_components/vue/dist/vue.min.js"></script>
+    <script src="./js/jweixin-1.0.0.js"></script>
+    <script src="../bower_components/underscore/underscore-min.js"></script>
+    <script src="./js/pinchzoom.js"></script>
+    <script src="../js/server.js"></script>
+    <script src="./js/getArgs.js"></script>
+    <script src="./js/layer.js"></script>
+    <script type="text/javascript" src="./js/layui/layui.all.js"></script>
+    <script src="./js/repair.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="./js/need/layer.css">
+    <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
+    <link rel="stylesheet" href="css/meetstyle.css">
+	<title>隐患排查</title>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+			font-size: 16px;
+		}
+		.divtop{
+			width: 100%;
+			background-color: #40C7DB;
+			height: 45px;
+			line-height: 45px;
+			text-align: center;
+		}
+		.divtext{
+			margin-top: 9%;
+			height: 30px;
+			margin-left: 6%;
+		}
+		.divtime{
+			margin-top: 1%;
+			height: 45px;
+			margin-left: 6%;
+		}
+		.divarea{
+			margin-left: 7%;
+			margin-top: 3%;
+			text-align: center;
+		}
+		.divbutton{
+			margin-left: 45%;
+			margin-top: 45%;
+		}
+		 .nav li.none {
+	        border-radius: 20px;
+	        list-style: none;
+	      }
+	      .weui-btn_primary {
+	      		background-color: #338DFE;
+			}
+			.weui-cells {
+				margin-top: 1.05em;
+				line-height:1.45em;
+			}
+	.weui-btn {
+	        border-bottom-right-radius: 0px;
+			border-bottom-left-radius: 0px;
+			line-height:2.5;
+		}
+	</style>
+</head>
+<body id="patrol_add">
+
+	 <ul class="nav">
+		<li class="none active">{{date}}</li>
+	 </ul>
+
+	<div class="weui-cells weui-cells_form">
+	    <div class="weui-cell">
+	        <div class="weui-cell__hd"><label for="" class="weui-label">时间</label></div>
+	        <div class="weui-cell__bd">
+	            <input class="weui-input" type="text" value="{{datetime}}" placeholder="拍照自动获取时间" disabled="disabled">
+	        </div>
+	    </div>
+	</div>
+
+	<div class="weui-cells weui-cells_form">
+	    <div class="weui-cell">
+	        <div class="weui-cell__hd"><label for="" class="weui-label">地点</label></div>
+	        <div class="weui-cell__bd">
+	            <input class="weui-input" type="text" v-model="place" placeholder="请填写巡查地点">
+	        </div>
+	    </div>
+	</div>
+
+	<div class="weui-cells weui-cells_form">
+	    <div class="weui-cell">
+	        <div class="weui-cell__hd"><label for="" class="weui-label">巡查情况</label></div>
+	        <input type="radio" checked value="异常">异常
+	    </div>
+	</div>
+
+	<div class="weui-cells weui-cells_form">
+	    <div class="weui-cell">
+	        <div class="weui-cell__bd">
+	            <textarea class="weui-textarea" placeholder="请填写备注（选填）" rows="3" v-model="content"></textarea>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="weui-uploader">
+		<div class="weui-cells__title">拍照</div>
+          	<ul class="weui-uploader__files" id="uploaderFiles" v-repeat="list: lists">
+	            <li class="weui-uploader__file weui-uploader__file_status" style="background-image:url({{list}})"></li>
+          	</ul>
+          <div class="weui-uploader__input-box">
+            <input id="uploaderInput" class="weui-uploader__input" v-on="click:set_image()">
+          </div>
+	</div>
+
+	<a href="javascript:;" class="weui-btn weui-btn_primary" style ='clear:both;width:80%;' v-on="click:add()" id="id-add">提交</a>
+
+	<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="../js/server.js"></script>
+	<script src="./js/getArgs.js"></script>
+    <script src="../bower_components/vue/dist/vue.min.js"></script>
+    <script src="./js/layer.js"></script>
+	<script src="./js/layui/layui.all.js"></script>
+    <script>
+	  // 加载层
+	  index1 = layer.open({
+	    type: 2
+	    ,content: '加载中'
+	    ,shadeClose: false
+	  });
+	</script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="./js/hiddenCheck.js"></script>
+</body>
+</html>

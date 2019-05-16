@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>失物招领</title>
+  <link rel="stylesheet" href="../js/layui/css/layui.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/uploadResources.css">
+  <link rel="stylesheet" href="../css/lost/lost_list.css">
+</head>
+<body id="lost">
+  <div class="uploadBox">
+    <div class="sources">
+      <div class="sources_left">
+        发布时间
+      </div>
+      <div class="sources_right">
+        <input type="text" id="time" v-model="nowtime">
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        物品名称
+      </div>
+      <div class="sources_right">
+        <input type="text" id="thing" placeholder="请输入物品名称">
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        捡物地点
+      </div>
+      <div class="sources_right">
+        <input type="text" id="lostplace" placeholder="请输入捡物地点">
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        领取地点
+      </div>
+      <div class="sources_right">
+        <input type="text" id="getplace" placeholder="请输入领取地点">
+      </div>
+    </div>
+    <div class="sources">
+      <div class="sources_left">
+        物品图片
+      </div>
+      <div class="sources_right testListBox">
+        <div id="testList" v-on="click:set_image();">
+        <img src="../img/camera.png">
+        </div>
+        <!-- 上传图片 -->
+        <div class="picBox">
+
+        </div>
+        <!-- 传图片-->
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 发布 -->
+  <div>
+    <div style="height: 65px;"></div>
+    <div class="operate">
+      <center><button v-on="click:sub()" class="btn btn-primary btn-lg" id="id-sub"><span class="fonts">发布</span></button></center>
+    </div>
+  </div>
+</body>
+
+<script src="../js/jquery-2.1.0.min.js"></script>
+<script src="../../bower_components/vue/dist/vue.min.js"></script>
+<script src="../../js/server.js"></script>
+<script src="../js/getArgs.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="../js/layui/layui.all.js"></script>
+<script type="text/javascript" src="../js/lost/addlost.js"></script>
+</html>

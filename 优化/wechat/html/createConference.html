@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, userscalable=no">
+    <title>创建会议</title>
+    <link rel="stylesheet" href="../theme/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="./js/layui/css/layui.css">
+    <link rel="stylesheet" href="./js/zTree/zTreeStyle.css">
+    <link rel="stylesheet" href="./css/public.css">
+    <link rel="stylesheet" href="./css/base/datePicker.css">
+    <link rel="stylesheet" href="./css/createConference.css">
+  </head>
+<body id="create">
+     <div class="box">
+         <div class="input-style">
+              <div class="box_left">
+                 会议名称
+                 <span class="spanicon">*</span>
+              </div>
+              <div class="box_right">
+                  <input id="name" placeholder="请输入会议名称" class="input-place"></input>
+              </div>
+          </div>
+
+          <div class="input-style">
+              <div class="box_left">
+                 会议地点
+                 <span class="spanicon">*</span>
+              </div>
+              <div class="box_right">
+                  <select class="layui-input" id="place">
+                    <option v-repeat="list in lists">{{ list.location_name }}</option>
+                  </select>
+              </div>
+          </div>
+
+          <div class="input-style">
+              <div class="box_left">
+                 开始时间
+                 <span class="spanicon">*</span>
+              </div>
+              <div class="box_right">
+                  <input type="text" placeholder="请选择会议开始时间" readonly="readonly" class="layui-input start" id="starttime">
+              </div>
+          </div>
+
+          <div class="input-style">
+             <div class="box_left">
+                 结束时间
+              </div>
+              <div class="box_right">
+                 <input type="text" placeholder="请选择会议结束时间" readonly="readonly" class="layui-input end" id="endtime">
+              </div>
+          </div>
+
+          <!-- <div class="input-style">
+             <div class="box_left">
+                 参会人员
+              </div>
+              <div class="box_right">
+                 <button v-on="click:importEnterpriseTranslate" class="layui-btn"><i class="layui-icon layui-icon-user"></i>选择企业用户分组</button>
+              </div>
+          </div> -->
+
+          <div class="input-style">
+             <div class="box_left">
+                 参会人员
+              </div>
+              <div class="box_right">
+                 <button v-on="click:selectTeacher" class="layui-btn"><i class="layui-icon layui-icon-user"></i>选择本校教师分组</button>
+              </div>
+          </div>
+
+          <!-- 遮罩 -->
+          <div class="bak"></div>
+
+        <div class="operate">
+          <div>
+             <center><button id="saveBtn" v-on="click: submit()" class="btn btn-primary btn-lg"><span class="fonts">创建会议</span></button></center>
+          </div>
+        </div>
+     </div>
+
+    <!-- 企业微信人员 -->
+    <div class="person person1" id="selectedEnterprise">
+      <input type="hidden" id="enterpriseid">
+      <ul id="selectedEnterpriseTree" class="ztree"></ul>
+      <div class="btn">
+         <button id="saveSelectedEnterprise">确定</button>
+      </div>
+    </div>
+
+    <!-- 本校教师 -->
+    <div class="person person2" id="selectedTeacher">
+       <input type="hidden" id="teacherid">
+       <ul id="selectedTeacherTree" class="ztree"></ul>
+       <div class="btn">
+          <button id="saveSelectedTeacher">确定</button>
+       </div>
+    </div>
+
+    <script type="text/javascript" src="./js/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="js/base/iscroll.js"></script>
+    <script type="text/javascript" src="js/base/datePicker.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="../bower_components/vue/dist/vue.min.js"></script>
+    <script src="../js/server.js"></script>
+    <script type="text/javascript" src="./js/layui/layui.all.js"></script>
+    <script type="text/javascript" src="./js/zTree/jquery.ztree.core-3.5.js"></script>
+    <script type="text/javascript" src="./js/zTree/jquery.ztree.excheck-3.5.js"></script>
+    <script type="text/javascript" src="./js/zTree/jquery.ztree.exedit-3.5.js"></script>
+    <script src="./js/getArgs.js"></script>
+    <script type="text/javascript" src="./js/layui/layui.all.js"></script>
+    <script src="./js/createConference.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>添加通知</title>
+  <link rel="stylesheet" href="./js/layui/css/layui.css">
+  <link rel="stylesheet" href="./js/zTree/zTreeStyle.css">
+  <link rel="stylesheet" href="css/notice.css">
+</head>
+
+<body>
+  <div class="add" id="addNotice">
+    <div class="title">
+      <span>通知标题</span>
+      <input type="text" placeholder="请填写标题(必填)" id="title">
+    </div>
+    <div class="title titlePublish">
+      <span>发布者</span>
+      <select v-model="departmentId">
+        <option value="">请选择发布部门</option>
+        <option value="{{depart.id}}" v-repeat="depart:depart">{{depart.department}}</option>
+      </select>
+      <div class="tips">
+          * 部门不选择的话，发布者默认为个人
+      </div>
+    </div>
+
+    <div class="notice_detail">
+      <textarea name="" rows="11" placeholder="请输入通知内容(必填)" id="content"></textarea>
+    </div>
+    <div id="jurisdiction">
+      <div class="range">请选择发布范围：</div>
+      <div class="chooserange">
+        <input type="radio" name="pub" checked="true" v-on="click:pub(0)"> 发布到班级&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="pub" v-on="click:pub(1)"> 发布到教师
+      </div>
+      <ul id="treeType" class="ztree" v-if="show == 0"></ul>
+      <ul id="treeType1" class="ztree" v-if="show == 1"></ul>
+      <!-- <div class="shade">
+
+      </div> -->
+    </div>
+    <div class="notice-btn">
+      <div style="height: 60PX;"></div>
+      <div class="notice_btn">
+        <button id="btn">提交</button>
+      </div>
+    </div>
+
+
+    <!-- 部门选择 -->
+    <!-- <div class="layui-form-item" id="department" style="display: none;">
+      <div style="margin-top:5px;">
+        <label class="layui-form-label label1">部门选择：</label>
+        <div class="layui-input-block">
+          <select style="width: 67%;height: 38px;border-radius: 5px;border:1px solid #eee" id="departID">
+            <option value="{{depart.id}}" v-repeat="depart:depart">{{depart.department}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="butt">
+        <button class="layui-btn" v-on="click:departSub();">提交</button>
+      </div>
+    </div> -->
+  </div>
+  <script src="../js/server.js"></script>
+  <script src="./js/getArgs.js"></script>
+  <!-- <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script> -->
+  <script src="./js/jquery-2.1.0.min.js"></script>
+  <script src="../bower_components/vue/dist/vue.min.js"></script>
+  <script type="text/javascript" src="./js/layui/layui.all.js"></script>
+  <script type="text/javascript" src="./js/zTree/jquery.ztree.core-3.5.js"></script>
+  <script type="text/javascript" src="./js/zTree/jquery.ztree.excheck-3.5.js"></script>
+  <script type="text/javascript" src="./js/zTree/jquery.ztree.exedit-3.5.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      var src = window.location.href;
+      var first = src.indexOf('?u=');
+      var openID = src.substr(first + 3);
+      $('#btn').click(function () {
+        $('#btn').attr('disabled',true);
+        var title = $('#title').val();
+        var content = $('#content').val();
+        if (!content || !title) {
+          layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.alert('信息填写不完整', { icon: 2 });
+          });
+        }
+        else {
+          //获取选择班级情况
+          if (addNotice.show == 0) {
+            var zTree = $.fn.zTree.getZTreeObj("treeType");
+            var nodes = zTree.getCheckedNodes(true);
+            var NodeString = '';
+            var organizeID = '';
+
+            $.each(nodes, function (n, value) {
+              var status = value.getCheckStatus(true);
+              if (!status.half) {
+                if (n > 0) {
+                  NodeString += ',';
+                }
+                NodeString += value.id;
+              }
+            });
+          } else {
+            var zTree1 = $.fn.zTree.getZTreeObj("treeType1");
+            var nodes1 = zTree1.getCheckedNodes(true);
+            var NodeString1 = '';
+            var user = '';
+            $.each(nodes1, function (n, value) {
+              var status = value.getCheckStatus(true);
+              if (!status.half) {
+                if (n > 0) {
+                  NodeString1 += ',';
+                }
+                NodeString1 += value.id;
+              }
+            });
+            if (NodeString1.length > 0) {
+              var user = NodeString1.split(',');
+            }
+            var arr = [];
+            for (var i = 0; i < user.length; i++) {
+              if (parseInt(user[i]) > 0) {
+                arr.push(user[i]);
+              }
+            }
+            var newArr = [];
+            for (var i = 0; i < arr.length; i++) {
+              if (newArr.indexOf(arr[i]) == -1) {
+                newArr.push(arr[i]);
+              }
+            }
+            if (newArr.length > 0) {
+              newArr = newArr.join(',');
+            }
+          }
+          // 获取当前时间
+          var nowtime = null;
+          $.ajax({
+            type: 'GET',
+            url: baseURL + '/wechattime',
+            success: function (data) {
+              nowtime = data;
+              //保存
+              $.ajax({
+                type: "POST",
+                url: baseURL + '/weSaveNotice',
+                data: {
+                  title: title,
+                  content: content,
+                  time: nowtime,
+                  organizeID: NodeString,
+                  openID: openID,
+                  departmentId: addNotice.departmentId,
+                  teacherId: newArr
+                },
+                success: function (data) {
+                  layer.alert('通知消息添加成功！', { icon: 1 }, function () {
+                    window.location.href = './holidayNotice.html?u=' + openID;
+                  });
+                },
+                error: function (data) {
+                  layer.alert(data.responseJSON, { icon: 2 });
+                }
+              });
+            }
+          });
+        }
+      });
+      var addNotice = new Vue({
+        el: "#addNotice",
+        data: {
+          depart: null,
+          departmentId: 0,
+          show: 0
+        },
+        methods: {
+          pub: function (id) {
+            addNotice.show = id;
+            init();
+          }
+        },
+      });
+
+      //获取组织结构
+      init();
+      function init() {
+        var setting = {
+          check: {
+            enable: true,
+            chkStyle: "checkbox",
+            chkboxType: { "Y": "s", "N": "s" }
+          },
+          data: {
+            simpleData: {
+              enable: true
+            }
+          },
+          callback: {
+            onCheck: zTreeOnCheck,
+            onClick: zTreeOnCheck
+          }
+        };
+        if (addNotice.show == 0) {
+          $.ajax({
+            type: "GET",
+            url: baseURL + '/getOrganization',
+            success: function (data) {
+              $.fn.zTree.init($("#treeType"), setting, data);
+              var zTree = $.fn.zTree.getZTreeObj("treeType");
+              zTree.expandAll(false);
+            }
+          });
+        } else {
+          //获取教师
+          $.getJSON(baseURL + '/teacherGroup', function (res) {
+            res.push({ id: -1, name: "全部门" });
+            $.fn.zTree.init($("#treeType1"), setting, res);
+            var zTree = $.fn.zTree.getZTreeObj("treeType1");
+            zTree.expandAll(false);
+          });
+        }
+        //发布部门
+        $.ajax({
+          type: "GET",
+          url: baseURL + '/departmentShow/',
+          success: function (data) {
+            addNotice.depart = data;
+          }
+        });
+      }
+      //选择全校时，发布人定位为部门
+      function zTreeOnCheck(event, treeId, treeNode) {
+        if (addNotice.show == 0) {
+          var zTree = $.fn.zTree.getZTreeObj("treeType");
+          zTree.checkNode(treeNode, !treeNode.checked, true);
+        } else {
+          var zTree = $.fn.zTree.getZTreeObj("treeType1");
+          zTree.checkNode(treeNode, !treeNode.checked, true);
+        }
+      }
+    });
+    //弹窗
+    function ope(title, obj) {
+      layui.use('layer', function () {
+        var layer = layui.layer;
+        layer.open({
+          type: 1,
+          title: title,
+          area: ['300px', '200px'],
+          content: $(obj),
+          end: function (index, layero) {
+            $(obj).css({ display: "none" });
+          },
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>

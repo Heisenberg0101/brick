@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, userscalable=no">
+    <title>考勤</title>
+    <link rel="stylesheet" href="./bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="./css/workAttendance.css">
+  </head>
+<body style="background:#fff" id="workAttendance">
+     <div>
+        <div class="head">
+          <div class="btn-group">
+            <button type="button" class="active" id="school">上学签到</button>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" >放学签离</button>
+          </div>
+
+         <!--  <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown">
+              选修考勤<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">汽车文化</a></li>
+              <li><a href="#">电脑制作</a></li>
+            </ul>
+          </div> -->
+        </div>
+
+        <!-- 学生名单 -->
+        <div class="students">
+          <ul>
+              <li v-repeat="students:students">
+                <div class="picBox">
+                  <input type="hidden" class="studentId" value="{{students.ID}}">
+                  <!-- <img src="./imges/tb9.png" alt="" v-on="click:showType(students.ID);"> -->
+                   <img v-if="students.photo != ''"  src="{{students.photo}}" v-on="click:showType(students.ID);">
+                   <div class="lastName" v-on="click:showType(students.ID);" v-if="students.photo == ''">{{students.lastName}}</div>
+
+                   <span class="type name{{students.ID}}">{{state}}</span>
+                </div>
+                <div class='name'><input type="checkbox"> {{students.name}}</div>
+              </li>
+          </ul>
+        </div>
+     </div>
+
+     <div class="top"></div>
+
+     <!-- 提交 -->
+     <div class="btn">
+        <button v-on="click:sub();" id="btnSub">提交</button>
+     </div>
+
+     <!-- 常规考勤弹窗 上学签到-->
+     <div class="normal normalWork">
+        <ul>
+          <li>已出勤</li>
+          <li>迟到</li>
+          <li>病假</li>
+          <li>事假</li>
+          <li>其它</li>
+        </ul>
+     </div>
+
+     <!-- 常规考勤弹窗 放学签离-->
+     <div class="normal courseWork">
+        <ul>
+          <li>放学</li>
+          <li>留堂</li>
+        </ul>
+     </div>
+    <script type="text/javascript" src="./js/jquery-2.1.0.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="../js/server.js"></script>
+    <script src="../bower_components/vue/dist/vue.min.js"></script>
+    <script src="./js/getArgs.js"></script>
+    <script type="text/javascript" src="./js/layui/layui.all.js"></script>
+    <script src="./js/workAttendance.js"></script>
+
+</body>
+</html>

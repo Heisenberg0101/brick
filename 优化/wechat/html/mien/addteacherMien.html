@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="../js/layui/css/layui.css">
+<link rel="stylesheet" href="../bootstrap/bootstrap.css">
+<link rel="stylesheet" href="../css/news_style.css">
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/addmien.css">
+<title>增加风采</title>
+</head>
+
+<body id="addmien">
+   <div class="mien-box">
+      <div class="mien-list">
+        <div class="mien-title">实践类型</div>
+        <div class="mien-opt">
+          <input type="text" id="title" value="" name="title" v-model="mien_type">
+        </div>
+      </div>
+      <div class="mien-list">
+        <div class="mien-title">活动时长</div>
+        <div class="mien-opt">
+          <input  id="time" type="number" value="" placeholder="请填写活动时长">min
+        </div>
+      </div>
+      <div class="addmien">
+        <!-- <div contentEditable="true" id="con" class="form-control ">
+            请填写活动内容或心得
+
+        </div> -->
+        <textarea name="" id="con" cols="30" rows="10" placeholder="请填写活动内容或心得"></textarea>
+        <!-- 上传图片保存地址 -->
+        <div class="picBox">
+
+        </div>
+      </div>
+      <div class="addlist" id="upload" v-on="click: set_image(data, $event, &quot;home&quot;)">
+        <div class="addlist_left"><i class="layui-icon layui-icon-picture"></i></div>
+        <div class="addlist_right">上传图片</div>
+      </div>
+      <div>
+        <div style="height: 45px"></div>
+        <div class="submit">
+          <button v-on="click:addnews()" id="btn">提交</button>
+        </div>
+      </div>
+   </div>
+
+</body>
+
+<script src="../js/jquery-2.1.0.min.js"></script>
+<script src="../../js/server.js"></script>
+<script src="../js/getArgs.js"></script>
+<script src="../../bower_components/vue/dist/vue.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="../../theme/layui/layui.js"></script>
+<script src="../js/layui/layui.all.js"></script>
+<script src="../js/mien/addteacherMien.js"></script>
+</html>
